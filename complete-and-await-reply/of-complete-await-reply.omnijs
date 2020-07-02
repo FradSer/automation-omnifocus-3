@@ -1,0 +1,68 @@
+/*{
+	"author": "Frad LEE",
+	"targets": ["omnifocus"],
+	"type": "action",
+	"identifier": "me.frad.omnifocus.complete-and-await-reply",
+	"version": "0.1",
+	"description": "Mark the currently selected task as complete and add a new task to await the reply.",
+	"label": "Complete and Await Reply",
+	"mediumLabel": "Complete and Await Reply",
+	"paletteLabel": "Complete and Await Reply",
+}*/
+(() => {
+  let action = new PlugIn.Action(function (selection) {
+    // Waiting tag
+    waitingName = "Waiting";
+
+    // Prefix of name
+    prefixOfName = "Waiting on reply: ";
+
+    // Current time
+    today = new Date();
+    date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    dateTime = date + " " + time;
+
+    let duplicatedTasks = new Array();
+    selection.tasks.forEach(function (task) {
+      insertionLocation = task.after;
+      if (insertionLocation === null) {
+        insertionLocation = inbox.ending;
+      }
+      dupTasks = duplicateTasks([task], insertionLocation);
+
+      // Process name
+      if (!task.name.startsWith(prefixOfName)) {
+        targetName = prefixOfName + task.name;
+      } else {
+        reg = new RegExp(prefixOfName, "");
+        targetName = prefixOfName + task.name.replace(reg, "");
+      }
+      dupTasks[0].name = targetName;
+
+      // Process note
+      targetNote = task.note + "\n------\nReply at: " + dateTime;
+      dupTasks[0].note = targetNote;
+
+      // Process tag
+      dupTasks[0].addTag(tagNamed(waitingName));
+
+      duplicatedTasks.push(dupTasks[0].id.primaryKey);
+      task.markComplete();
+    });
+    idStr = duplicatedTasks.join(",");
+    URL.fromString("omnifocus:///task/" + idStr).open();
+  });
+
+  action.validate = function (selection) {
+    return selection.tasks.length >= 1;
+  };
+
+  return action;
+})();
