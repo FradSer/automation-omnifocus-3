@@ -1,4 +1,4 @@
-# Complete and Await Reply
+# Complete and Await Reply ![](https://img.shields.io/badge/-OmniJS-blueviolet)
 
 Mark the currently selected task as complete and add a new task to await the reply.
 
