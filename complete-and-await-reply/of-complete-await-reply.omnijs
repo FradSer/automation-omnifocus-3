@@ -3,7 +3,7 @@
 	"targets": ["omnifocus"],
 	"type": "action",
 	"identifier": "me.frad.omnifocus.complete-and-await-reply",
-	"version": "0.1",
+	"version": "0.2",
 	"description": "Mark the currently selected task as complete and add a new task to await the reply.",
 	"label": "Complete and Await Reply",
 	"mediumLabel": "Complete and Await Reply",
@@ -11,11 +11,12 @@
 }*/
 (() => {
   let action = new PlugIn.Action(function (selection) {
-    // Waiting tag
-    waitingName = "Waiting";
+    waitingTagName = "Waiting";
+    locationTagName = "Location";
+    homeTagName = "at Home";
+    companyTagName = "at Company";
 
-    // Prefix of name
-    prefixOfName = "Waiting on reply: ";
+    purchasingPrefix = "买";
 
     // Current time
     today = new Date();
@@ -29,6 +30,9 @@
       today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     dateTime = date + " " + time;
 
+    // Prefix of name
+    prefixOfName = "Waiting on reply: ";
+
     let duplicatedTasks = new Array();
     selection.tasks.forEach(function (task) {
       insertionLocation = task.after;
@@ -38,20 +42,75 @@
       dupTasks = duplicateTasks([task], insertionLocation);
 
       // Process name
-      if (!task.name.startsWith(prefixOfName)) {
+      // FIXME 目前处理只处理第一个购买任务
+      if (task.name.startsWith(purchasingPrefix)) {
+        inputForm = new Form();
+
+        popupMenu = new Form.Field.Option(
+          "menuItem",
+          "Location",
+          [1, 2],
+          ["Home", "Company"],
+          1
+        );
+
+        inputForm.addField(popupMenu);
+
+        formPrompt = "Where will the item you bought ship?";
+        buttonTitle = "OK";
+
+        formPromise = inputForm.show(formPrompt, buttonTitle);
+
+        // inputForm.validate = function (formObject) {
+        //   validation =
+        //   return validation;
+        // };
+
+        formPromise.then(function (formObject) {
+          menuItem = formObject.values["menuItem"];
+          switch (menuItem) {
+            case 1:
+              updateDupTask(
+                purchasingPrefix,
+                task,
+                dupTasks,
+                "家",
+                homeTagName
+              );
+              break;
+            case 2:
+              updateDupTask(
+                purchasingPrefix,
+                task,
+                dupTasks,
+                "公司",
+                companyTagName
+              );
+              break;
+          }
+        });
+
+        formPromise.catch(function (err) {
+          console.log("form cancelled", err.message);
+        });
+      } else if (!task.name.startsWith(prefixOfName)) {
         targetName = prefixOfName + task.name;
+        dupTasks[0].addTag(tagNamed(waitingTagName));
+
+        dupTasks[0].clearTags();
+        dupTasks[0].name = targetName;
       } else {
         reg = new RegExp(prefixOfName, "");
         targetName = prefixOfName + task.name.replace(reg, "");
+
+        dupTasks[0].clearTags();
+        dupTasks[0].addTag(tagNamed(waitingTagName));
+        dupTasks[0].name = targetName;
       }
-      dupTasks[0].name = targetName;
 
       // Process note
       targetNote = task.note + "\n------\nReply at: " + dateTime;
       dupTasks[0].note = targetNote;
-
-      // Process tag
-      dupTasks[0].addTag(tagNamed(waitingName));
 
       duplicatedTasks.push(dupTasks[0].id.primaryKey);
       task.markComplete();
@@ -63,6 +122,17 @@
   action.validate = function (selection) {
     return selection.tasks.length >= 1;
   };
+
+  function updateDupTask(action, task, dupTasks, locationName, locationTag) {
+    reg = new RegExp(action, "");
+
+    targetName = task.name.replace(reg, "") + "快递到" + locationName;
+
+    dupTasks[0].clearTags();
+    dupTasks[0].addTag(tagNamed(waitingTagName));
+    dupTasks[0].addTag(tagNamed(locationTagName).tagNamed(locationTag));
+    dupTasks[0].name = targetName;
+  }
 
   return action;
 })();
