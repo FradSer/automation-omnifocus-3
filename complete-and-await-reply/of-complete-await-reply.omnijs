@@ -11,12 +11,11 @@
 }*/
 (() => {
   let action = new PlugIn.Action(function (selection) {
+    // Waiting tag
     waitingTagName = "Waiting";
     locationTagName = "Location";
     homeTagName = "at Home";
     companyTagName = "at Company";
-
-    purchasingPrefix = "买";
 
     // Current time
     today = new Date();
@@ -42,8 +41,9 @@
       dupTasks = duplicateTasks([task], insertionLocation);
 
       // Process name
-      // FIXME 目前处理只处理第一个购买任务
-      if (task.name.startsWith(purchasingPrefix)) {
+      // FIXME 目前处理只处理第一个任务
+      // FIXME 目前的逻辑是无论操作是否完成都会复制任务并且把原本的标记成完成
+      if (task.name.startsWith("买")) {
         inputForm = new Form();
 
         popupMenu = new Form.Field.Option(
@@ -70,22 +70,10 @@
           menuItem = formObject.values["menuItem"];
           switch (menuItem) {
             case 1:
-              updateDupTask(
-                purchasingPrefix,
-                task,
-                dupTasks,
-                "家",
-                homeTagName
-              );
+              updateDupTask(task, dupTasks, "家", homeTagName);
               break;
             case 2:
-              updateDupTask(
-                purchasingPrefix,
-                task,
-                dupTasks,
-                "公司",
-                companyTagName
-              );
+              updateDupTask(task, dupTasks, "公司", companyTagName);
               break;
           }
         });
@@ -112,6 +100,8 @@
       targetNote = task.note + "\n------\nReply at: " + dateTime;
       dupTasks[0].note = targetNote;
 
+      dupTasks[0].addTag(tagNamed(waitingTagName));
+
       duplicatedTasks.push(dupTasks[0].id.primaryKey);
       task.markComplete();
     });
@@ -123,8 +113,8 @@
     return selection.tasks.length >= 1;
   };
 
-  function updateDupTask(action, task, dupTasks, locationName, locationTag) {
-    reg = new RegExp(action, "");
+  function updateDupTask(task, dupTasks, locationName, locationTag) {
+    reg = new RegExp("买", "");
 
     targetName = task.name.replace(reg, "") + "快递到" + locationName;
 
