@@ -30,7 +30,7 @@
     dateTime = date + " " + time;
 
     // Prefix of name
-    prefixOfName = "Waiting on reply: ";
+    prefixOfName = "Reply on: ";
 
     let duplicatedTasks = new Array();
     selection.tasks.forEach(function (task) {
@@ -101,8 +101,14 @@
       dupTasks[0].note = targetNote;
 
       dupTasks[0].addTag(tagNamed(waitingTagName));
+      if (dupTasks[0].hasChildren) {
+        dupTasks[0].flattenedChildren.forEach(function (task) {
+          deleteObject(task);
+        });
+      }
 
       duplicatedTasks.push(dupTasks[0].id.primaryKey);
+
       task.markComplete();
     });
     idStr = duplicatedTasks.join(",");
