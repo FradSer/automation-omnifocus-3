@@ -11,8 +11,6 @@
 }*/
 ;(() => {
   let action = new PlugIn.Action(function (selection) {
-    // Buy text
-
     // Waiting tag
     waitingTagName = 'Waiting'
 
@@ -48,7 +46,6 @@
       dupTasks = duplicateTasks([task], insertionLocation)
 
       // Process name
-
       dupTasks.forEach(function (targetTask) {
         targetTaskName = targetTask.name
 
@@ -88,19 +85,18 @@
             console.log('form cancelled', err.message)
           })
         } else if (!targetTaskName.startsWith(prefixOfTargetTask)) {
-          targetTask.addTag(tagNamed(waitingTagName))
-          targetTask.clearTags()
           targetTask.name = prefixOfTargetTask + originTaskName
-        } else {
-          targetTask.clearTags()
-          targetTask.addTag(tagNamed(waitingTagName))
         }
 
         // Process note
         targetNote = task.note + '\n------\nReply at: ' + dateTime
         targetTask.note = targetNote
 
+        // Process tag
+        targetTask.clearTags()
         targetTask.addTag(tagNamed(waitingTagName))
+
+        // Remove children tasks if exist
         if (targetTask.hasChildren) {
           targetTask.flattenedChildren.forEach(function (task) {
             deleteObject(task)
@@ -128,8 +124,6 @@
       shipActionName +
       locationName
 
-    targetTask.clearTags()
-    targetTask.addTag(tagNamed(waitingTagName))
     targetTask.addTag(tagNamed(locationTagName).tagNamed(locationTag))
     targetTask.name = targetName
   }
