@@ -1,4 +1,8 @@
-# Complete and Await Reply ![](https://img.shields.io/badge/-OmniJS-blueviolet)
+<p align="center">
+  <img src="./OFCompleteAwaitReply.omnifocusjs/Resources/icon.png">
+</p>
+
+<h1 align="center">Complete and Await Reply <img src="https://img.shields.io/badge/-OmniJS-blueviolet"></h1>
 
 Mark the currently selected task as complete and add a new task to await the reply.
 
@@ -8,14 +12,20 @@ This script is based on the script from [OMNI-AUTOMATION.COM](https://omni-autom
 
 ## Changelog
 
-### v0.2
+### v0.1.0
+
+#### Changed
+
+- Merge to [OmniFocus bundle](https://omni-automation.com/plugins/bundle.html) with icon.
+
+### v0.0.2
 
 #### Added
 
 - New shopping list task processing: If the selected task start with `purchasingPrefix`, "买" as default, then a dialogue appears to let user choose where will the item he bought ship.
   ![](./image/image-1.gif)
 
-### v0.1
+### v0.0.1
 
 #### Added
 
