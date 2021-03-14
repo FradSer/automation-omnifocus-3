@@ -1,14 +1,3 @@
-/*{
-	"author": "Frad LEE",
-	"targets": ["omnifocus"],
-	"type": "action",
-	"identifier": "me.frad.omnifocus.complete-and-await-reply",
-	"version": "0.2",
-	"description": "Mark the currently selected task as complete and add a new task to await the reply.",
-	"label": "Complete and Await Reply",
-	"mediumLabel": "Complete and Await Reply",
-	"paletteLabel": "Complete and Await Reply",
-}*/
 ;(() => {
   let action = new PlugIn.Action(function (selection) {
     // Buy text
