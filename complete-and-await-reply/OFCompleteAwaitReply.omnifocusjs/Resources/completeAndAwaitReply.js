@@ -1,16 +1,7 @@
-/*{
-	"author": "Frad LEE",
-	"targets": ["omnifocus"],
-	"type": "action",
-	"identifier": "me.frad.omnifocus.complete-and-await-reply",
-	"version": "0.2",
-	"description": "Mark the currently selected task as complete and add a new task to await the reply.",
-	"label": "Complete and Await Reply",
-	"mediumLabel": "Complete and Await Reply",
-	"paletteLabel": "Complete and Await Reply",
-}*/
 ;(() => {
   let action = new PlugIn.Action(function (selection) {
+    // Buy text
+
     // Waiting tag
     waitingTagName = 'Waiting'
 
@@ -46,6 +37,7 @@
       dupTasks = duplicateTasks([task], insertionLocation)
 
       // Process name
+
       dupTasks.forEach(function (targetTask) {
         targetTaskName = targetTask.name
 
@@ -85,18 +77,19 @@
             console.log('form cancelled', err.message)
           })
         } else if (!targetTaskName.startsWith(prefixOfTargetTask)) {
+          targetTask.addTag(tagNamed(waitingTagName))
+          targetTask.clearTags()
           targetTask.name = prefixOfTargetTask + originTaskName
+        } else {
+          targetTask.clearTags()
+          targetTask.addTag(tagNamed(waitingTagName))
         }
 
         // Process note
         targetNote = task.note + '\n------\nReply at: ' + dateTime
         targetTask.note = targetNote
 
-        // Process tag
-        targetTask.clearTags()
         targetTask.addTag(tagNamed(waitingTagName))
-
-        // Remove children tasks if exist
         if (targetTask.hasChildren) {
           targetTask.flattenedChildren.forEach(function (task) {
             deleteObject(task)
@@ -124,6 +117,8 @@
       shipActionName +
       locationName
 
+    targetTask.clearTags()
+    targetTask.addTag(tagNamed(waitingTagName))
     targetTask.addTag(tagNamed(locationTagName).tagNamed(locationTag))
     targetTask.name = targetName
   }
