@@ -86,7 +86,7 @@
         }
 
         // Process note
-        targetNote = task.note + '\n------\nReply at: ' + dateTime
+        targetNote = task.note + '\n\nReply at: ' + dateTime + '\n------'
         targetTask.note = targetNote
 
         targetTask.addTag(tagNamed(waitingTagName))
