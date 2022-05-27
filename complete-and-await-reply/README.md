@@ -12,6 +12,12 @@ This script is based on the script from [OMNI-AUTOMATION.COM](https://omni-autom
 
 ## Changelog
 
+### v0.1.1
+
+#### Changed
+
+- Update note logic.
+
 ### v0.1.0
 
 #### Changed

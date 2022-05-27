@@ -2,7 +2,7 @@
   "author": "Frad LEE",
   "identifier": "me.frad.omnifocus.complete-and-await-reply",
   "defaultLocale": "en",
-  "version": "1.0",
+  "version": "0.1.1",
   "description": "Mark the currently selected task as complete and add a new task to await the reply.",
   "actions": [
     {
