@@ -1,7 +1,5 @@
 ;(() => {
   let action = new PlugIn.Action(function (selection) {
-    // Buy text
-
     // Waiting tag
     waitingTagName = 'Waiting'
 

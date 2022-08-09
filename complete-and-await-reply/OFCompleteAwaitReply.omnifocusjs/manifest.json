@@ -6,11 +6,11 @@
   "description": "Mark the currently selected task as complete and add a new task to await the reply.",
   "actions": [
     {
-      "image": "icon.png",
+      "image": "img/about.png",
       "identifier": "aboutThisPlugin"
     },
     {
-      "image": "icon.png",
+      "image": "img/icon.png",
       "identifier": "completeAndAwaitReply"
     }
   ],
