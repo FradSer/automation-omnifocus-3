@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./OFCompleteAwaitReply.omnifocusjs/Resources/icon.png">
+  <img src="./OFCompleteAwaitReply.omnifocusjs/Resources/img/icon.png">
 </p>
 
 <h1 align="center">Complete and Await Reply <img src="https://img.shields.io/badge/-OmniJS-blueviolet"></h1>
